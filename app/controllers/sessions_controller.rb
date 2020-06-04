@@ -1,4 +1,6 @@
 class SessionsController < ApplicationController
+  before_action :get_user_by_session, only: [:destory]
+
   def create
     @user = User.find_by(username: params[:user][:username])
 
@@ -8,8 +10,6 @@ class SessionsController < ApplicationController
         value: session.token,
         httponly: true
       }
-
-      cookies[:testing123] = "tesingabc"
 
       render json: {
         success: true
@@ -23,7 +23,7 @@ class SessionsController < ApplicationController
 
   def authenticated
     token = cookies.signed[:twitter_session_token]
-    session = Session.find_by(token: token)
+    session = Session.find_by(token: token) # this token: token is referring to the token line above matching the value of token
 
     if session
       user = session.user
@@ -40,6 +40,21 @@ class SessionsController < ApplicationController
   end
 
   def destroy
+    session.delete(:user_id)
 
+    @user = nil
+    # redirect_to_root_url
+  end
+
+  private
+
+  def get_user_by_session
+    @session = @user.find_by[username: params[:cookies]]
+
+    if @session.nil?
+      render json: {
+        error: "cookies not found"
+      }
+    end
   end
 end

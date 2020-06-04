@@ -7,7 +7,12 @@ class TweetsController < ApplicationController
     @tweet = @user.tweets.new(create_params)
 
     if @tweet.save
-      render json: @tweet
+      render json: {
+        tweet: {
+          username: @user.username,
+          message: @tweet.message
+        }
+      }
     else
       render json: {
         errors: @tweet.errors.messages
@@ -16,20 +21,35 @@ class TweetsController < ApplicationController
   end
 
   def index
-    @tweets = Tweet.all
-    render json: @tweets
+    @tweet = Tweet.all
+
+    render json: {
+      tweet: {
+        id: @tweet.user_id,
+        username: @user.username,
+        message: @tweet.message
+      }
+    }
   end
 
   def index_by_user
-    @tweets = @user.tweets
+    @tweet = @user.tweets
 
-    render json: @tweets
+    render json: {
+      tweet: {
+        id: @tweet.user_id,
+        username: @user.username,
+        message: @tweet.message
+      }
+    }
   end
 
   def destroy
-    @tweet.destory
+    @tweet.destroy
 
-    render json: @tweet
+    render json: {
+      success: true
+    }
   end
 
   private

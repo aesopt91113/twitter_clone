@@ -3,6 +3,7 @@ class CreateSessions < ActiveRecord::Migration[5.2]
     create_table :sessions do |t|
       t.string 'token'
       t.integer 'user_id'
+      t.string 'cookies'
 
       t.timestamps
     end
