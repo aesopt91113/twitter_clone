@@ -40,20 +40,18 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    session.delete(:user_id)
+    token = cookies.signed[:twitter_session_token]
+    session = Session.find_by(token: token)
 
-    @user = nil
-    # redirect_to_root_url
-  end
+    if session
+      session.destroy
 
-  private
-
-  def get_user_by_session
-    @session = @user.find_by[username: params[:cookies]]
-
-    if @session.nil?
       render json: {
-        error: "cookies not found"
+        success: true
+      }
+    else
+      render json: {
+        success: false
       }
     end
   end

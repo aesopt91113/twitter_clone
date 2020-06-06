@@ -21,27 +21,15 @@ class TweetsController < ApplicationController
   end
 
   def index
-    @tweet = Tweet.all
+    @tweets = Tweet.all.order(created_at: :desc)
 
-    render json: {
-      tweet: {
-        id: @tweet.user_id,
-        username: @user.username,
-        message: @tweet.message
-      }
-    }
+    render "tweets/create.json.jbuilder"
   end
 
   def index_by_user
-    @tweet = @user.tweets
+    @tweets = @user.tweets
 
-    render json: {
-      tweet: {
-        id: @tweet.user_id,
-        username: @user.username,
-        message: @tweet.message
-      }
-    }
+    render "tweets/index_by_user.json.jbuilder"
   end
 
   def destroy

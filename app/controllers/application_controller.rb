@@ -6,13 +6,16 @@ class ApplicationController < ActionController::Base
     session = Session.find_by(token: token)
 
     if session.nil?
-      render json: "invalid token"
-    end
+      render json: {
+        success: false
+      }
+    else
+      @user = session.user
 
-    @user = session.user
-
-    if @user.nil?
-      render json: "you are not logged in"
+      if @user.nil?
+        render json: "you are not logged in"
+      end
     end
   end
+
 end
